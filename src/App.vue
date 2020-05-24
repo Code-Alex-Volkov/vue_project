@@ -1,28 +1,91 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="wrapper">
+    <div class="wrapper-content">
+      <section>
+        <div class="container">
+          <div id="app">
+            <h1>{{ title }}</h1>
+            <message v-if="message" :message="message" />
+            <div class="message" v-if="message">
+              <p>{{ message }}</p>
+            </div>
+
+            <newNote :note="note" @addNote="addNote" />
+
+            <div class="notes">
+              <div class="note" v-for="(note, index) in notes" :key="index">
+                <div class="note-header">
+                  <p>{{ note.title }}</p>
+                </div>
+                <div class="note-body">
+                  <p>{{ note.descr }}</p>
+                  <span>{{ note.date }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import message from "@/components/Message.vue";
+import newNote from "@/components/NewNote.vue";
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
-  }
-}
+    message,
+    newNote,
+  },
+  data() {
+    return {
+      title: "Notes App",
+      message: null,
+      note: {
+        title: "",
+        descr: "",
+      },
+      notes: [
+        {
+          title: "First Note",
+          descr: "Description for first note",
+          date: new Date(Date.now()).toLocaleString(),
+        },
+        {
+          title: "Second Note",
+          descr: "Description for second note",
+          date: new Date(Date.now()).toLocaleString(),
+        },
+        {
+          title: "Third Note",
+          descr: "Description for third note",
+          date: new Date(Date.now()).toLocaleString(),
+        },
+      ],
+    };
+  },
+  methods: {
+    addNote() {
+      let { title, descr } = this.note;
+
+      if (title === "") {
+        this.message = "title can`t be blank!";
+        return false;
+      }
+
+      this.notes.push({
+        title,
+        descr,
+        date: new Date(Date.now()).toLocaleString(),
+      });
+      this.message = null;
+      this.note.title = "";
+      this.note.descr = "";
+    },
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>
